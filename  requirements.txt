@@ -1,0 +1,11 @@
+Django>=3.2
+djangorestframework
+djangorestframework-simplejwt
+django-cors-headers
+drf-yasg
+celery
+redis
+python-decouple
+requests
+pytest
+pytest-django

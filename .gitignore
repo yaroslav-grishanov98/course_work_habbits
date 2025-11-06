@@ -1,0 +1,44 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Виртуальное окружение
+.venv/
+.env/
+venv/
+ENV/
+
+# Файлы IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Файлы базы данных SQLite
+db.sqlite3
+*.sqlite3
+
+# Миграции
+*/migrations/*.pyc
+*/migrations/*.py[cod]
+*/migrations/__pycache__/
+
+# Логи
+*.log
+
+# Файлы окружения
+.env
+
+# Pytest cache
+.pytest_cache/
+
+# mypy
+.mypy_cache/
+
+# Coverage reports
+htmlcov/
+.coverage
+
+# Static files (если собираете)
+staticfiles/
