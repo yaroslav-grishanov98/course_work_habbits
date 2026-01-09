@@ -46,5 +46,101 @@
 1. Клонируйте репозиторий:
 
 ```bash
-git clone https://github.com/yourusername/your-repo.git
-cd your-repo
+git clone https://github.com/yaroslav-grishanov98/course_work_habbits/
+```
+
+2. Создайте виртуальное окружение и активируйте его:
+- python -m venv .venv
+- source .venv/bin/activate
+
+3. Установите зависимости:
+- pip install -r requirements.txt
+
+## Структура проекта и описание файлов
+
+PythonCurseWorkLT/
+├── habits_project/           # Основной проект Django
+│   ├── __init__.py           # Инициализация пакета, импорт Celery приложения
+│   ├── celery.py             # Настройка и инициализация Celery
+│   ├── settings.py           # Основные настройки Django проекта
+│   ├── urls.py               # Главный роутинг проекта
+│   ├── wsgi.py               # Точка входа для WSGI-сервера
+│   └── asgi.py               # Точка входа для ASGI-сервера
+│
+├── habits/                   # Приложение для работы с привычками
+│   ├── __init__.py
+│   ├── admin.py              # Регистрация моделей в админке
+│   ├── apps.py               # Конфигурация приложения
+│   ├── models.py             # Модель Habit — описание привычки
+│   ├── serializers.py        # Сериализаторы для Habit
+│   ├── permissions.py        # Класс IsOwnerOrReadOnly — права доступа к привычкам
+│   ├── tasks.py              # Celery задачи, в том числе отправка уведомлений в Telegram
+│   ├── tests.py              # Тесты для приложения habits
+│   ├── urls.py               # Роутинг приложения habits
+│   └── views.py              # Вьюсеты для Habit (CRUD, публичный список)
+│
+├── users/                    # Приложение для работы с пользователями
+│   ├── __init__.py
+│   ├── admin.py              # Регистрация моделей в админке (если есть)
+│   ├── apps.py               # Конфигурация приложения с подключением сигналов
+│   ├── models.py             # Модель UserProfile для расширения User (telegram_chat_id)
+│   ├── signals.py            # Сигналы для автоматического создания профиля пользователя
+│   ├── serializers.py        # Сериализаторы для регистрации пользователей
+│   ├── tests.py              # Тесты для приложения users
+│   ├── urls.py               # Роутинг приложения users (регистрация, авторизация)
+│   └── views.py              # Вью для регистрации пользователей
+│
+├── manage.py                 # Скрипт для управления проектом Django
+├── requirements.txt          # Список зависимостей проекта
+├── .env.example              # Пример файла с переменными окружения
+├── .gitignore                # Файл с исключениями для git
+└── db.sqlite3                # Файл базы данных SQLite (если используется SQLite)
+
+### Описание основных классов и компонентов
+## habits/models.py
+
+- Habit — модель, описывающая привычку пользователя с полями:
+- user — владелец привычки
+- place, time, action — где, когда и что делать
+- is_pleasant — признак приятной привычки
+- related_habit — связь с приятной привычкой
+- periodicity — периодичность выполнения
+- reward — вознаграждение
+- duration_seconds — время на выполнение
+- is_public — публичность привычки
+
+### Методы валидации и сохранения
+
+## habits/serializers.py
+
+- HabitSerializer — сериализатор для модели Habit с валидациями по бизнес-логике
+- habits/permissions.py
+- IsOwnerOrReadOnly — класс прав доступа, разрешающий редактирование только владельцу привычки, а чтение — всем для публичных привычек
+- habits/views.py
+- HabitViewSet — вьюсет с CRUD операциями для привычек, а также с дополнительным action для публичных привычек с пагинацией
+- habits/tasks.py
+- send_habit_reminders — Celery задача, которая отправляет напоминания пользователям через Telegram-бота
+
+## habits/tests.py
+Набор тестов, покрывающих создание, валидацию, права доступа, пагинацию и публичные привычки
+
+- users/models.py
+- UserProfile — расширение стандартной модели User, содержит поле telegram_chat_id
+- users/signals.py
+
+### Сигналы для автоматического создания и сохранения профиля пользователя при создании или обновлении User
+
+## users/serializers.py
+
+- UserSerializer — сериализатор для регистрации пользователей
+- users/views.py
+- RegisterView — вью для регистрации новых пользователей
+- users/urls.py
+
+### Роутинг для регистрации и JWT авторизации (логин, обновление токена)
+
+## habits_project/celery.py
+
+- Конфигурация Celery, интеграция с Django settings, автозагрузка задач
+- habits_project/init.py
+- Импорт Celery приложения для корректного запуска воркера
